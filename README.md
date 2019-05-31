@@ -37,3 +37,9 @@ Stretch Goals
 6.  Weapon Handler (script for controlling the attributes of weapons)
 7.  Weapon Manager (script for controlling the switching between weapons in our game)
 8.  Configuring And Creating The Second Enemy
+
+
+
+Ultimate Stretch Goal
+
+--Make it into an online Player vs Player FPS.
