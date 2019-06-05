@@ -4,15 +4,12 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-
 public enum EnemyState {
 	PATROL,
 	CHASE,
 	ATTACK
 
 }
-
-
 
 public class EnemyController : MonoBehaviour {
 
@@ -37,8 +34,7 @@ public class EnemyController : MonoBehaviour {
 	private float attack_Timer;
 
 	private Transform target;
-
-
+	
 
 	void Awake() {
 		enemy_Anim = GetComponent<EnemyAnimator> ();
@@ -48,20 +44,160 @@ public class EnemyController : MonoBehaviour {
 	
 	}
 
-
-
+	
     void Start() {
         
+		enemy_State = EnemyState.PATROL;
+
+		patrol_Timer = patrol_For_This_Time;
+
+		attack_Timer = wait_Before_Attack;
+
+		current_Chase_Distance = chase_Distance;
+
     }
 
-
-
+	
     void Update() {
+
+		if (enemy_State == EnemyState.PATROL) {
+			Patrol();
+				
+		}
+
+		if (enemy_State == EnemyState.CHASE) {
+			Chase();
+			
+		}
+
+		if (enemy_State == EnemyState.ATTACK) {
+			Attack();
+			
+		}
         
     }
 
+	void Patrol() {
+
+		navAgent.isStopped = false;
+		navAgent.speed = walk_Speed;
+
+		patrol_Timer += Time.deltaTime;
+
+		if (patrol_Timer > patrol_For_This_Time) {
+
+			SetNewRandomDestination();
+
+			patrol_Timer = 0f;
+		}
+
+		if (navAgent.velocity.sqrMagnitude > 0) {
+			enemy_Anim.Walk (true);
+		
+		} else {
+
+			enemy_Anim.Walk(false);
+		
+		}
+
+		if (Vector3.Distance (transform.position, target.position) <= chase_Distance) {
+		
+			enemy_Anim.Walk(false);
+
+			enemy_State = EnemyState.CHASE;
+
+			// play Alert audio when spotted
+		
+		}
 
 
+	} // patrol
+
+	void Chase() {
+
+		navAgent.isStopped = false;
+		navAgent.speed = run_Speed;
+		
+		navAgent.SetDestination(target.position);
+		
+		if (navAgent.velocity.sqrMagnitude > 0) {
+			
+			enemy_Anim.Run(true);
+			
+		} else {
+			
+			enemy_Anim.Run(false);
+			
+		}
+		
+
+		if(Vector3.Distance(transform.position, target.position) <= attack_Distance) {
+
+			enemy_Anim.Run(false);
+			enemy_Anim.Walk(false);
+			enemy_State = EnemyState.ATTACK;
+
+			if(chase_Distance != current_Chase_Distance) {
+				chase_Distance = current_Chase_Distance;
+			}
+			
+		} else if(Vector3.Distance(transform.position, target.position) > chase_Distance) {
+
+			enemy_Anim.Run(false);
+			
+			enemy_State = EnemyState.PATROL;
+			
+			patrol_Timer = patrol_For_This_Time;
+			
+
+			if (chase_Distance != current_Chase_Distance) {
+				chase_Distance = current_Chase_Distance;
+			}
+			
+			
+		} // else
+		
+	} // chase
+
+	void Attack() {
+
+		navAgent.velocity = Vector3.zero;
+		navAgent.isStopped = true;
+
+		attack_Timer += Time.deltaTime;
+
+		if (attack_Timer > wait_Before_Attack) {
+
+			enemy_Anim.Attack();
+
+			attack_Timer = 0f;
+
+			// attack sound effects
+
+		}
+
+		if (Vector3.Distance (transform.position, target.position) >
+			attack_Distance + chase_After_Attack_Distance) {
+				
+			enemy_State = EnemyState.CHASE;
+		}
+		
+
+	} // attack
+
+	void SetNewRandomDestination() {
+
+		float rand_Radius = Random.Range (patrol_Radius_Min, patrol_Radius_Max);
+
+		Vector3 randDir = Random.insideUnitSphere * rand_Radius;
+		randDir += transform.position;
+
+		NavMeshHit navHit;
+
+		NavMesh.SamplePosition (randDir, out navHit, rand_Radius, -1);
+
+		navAgent.SetDestination (navHit.position);
+	}
 
 } // class
 
