@@ -36,6 +36,8 @@ public class EnemyController : MonoBehaviour {
 	private Transform target;
 
 	public GameObject attack_Point;
+
+	private EnemyAudio enemy_Audio;
 	
 
 	void Awake() {
@@ -43,6 +45,8 @@ public class EnemyController : MonoBehaviour {
 		navAgent = GetComponent<NavMeshAgent> ();
 
 		target = GameObject.FindWithTag (Tags.PLAYER_TAG).transform;
+
+		enemy_Audio = GetComponentInChildren<EnemyAudio> ();
 	
 	}
 
@@ -109,6 +113,7 @@ public class EnemyController : MonoBehaviour {
 			enemy_State = EnemyState.CHASE;
 
 			// play Alert audio when spotted
+			enemy_Audio.Play_ScreamSound();
 		
 		}
 
@@ -175,6 +180,7 @@ public class EnemyController : MonoBehaviour {
 			attack_Timer = 0f;
 
 			// attack sound effects
+			enemy_Audio.Play_AttackSound();
 
 		}
 
