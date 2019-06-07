@@ -34,6 +34,8 @@ public class EnemyController : MonoBehaviour {
 	private float attack_Timer;
 
 	private Transform target;
+
+	public GameObject attack_Point;
 	
 
 	void Awake() {
@@ -198,6 +200,23 @@ public class EnemyController : MonoBehaviour {
 
 		navAgent.SetDestination (navHit.position);
 	}
+
+	void Turn_On_AttackPoint() {
+		attack_Point.SetActive (true);
+	}
+	
+	void Turn_Off_AttackPoint() {
+		if (attack_Point.activeInHierarchy) {
+			attack_Point.SetActive (false);
+		}
+	}
+
+	public EnemyState Enemy_State {
+		get;
+		set;
+
+	}
+
 
 } // class
 
