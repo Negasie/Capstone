@@ -62,6 +62,7 @@ public class HealthScript : MonoBehaviour {
 
 			GetComponent<Animator>().enabled = false;
 			GetComponent<BoxCollider>().isTrigger = false;
+			GetComponent<Rigidbody>().isKinematic = false;
 			GetComponent<Rigidbody>().AddTorque(-transform.forward * 50f, ForceMode.VelocityChange);
 			print("HEYYYYYOOOOOO");
 
