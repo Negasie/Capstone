@@ -18,6 +18,8 @@ public class HealthScript : MonoBehaviour {
 
 	private EnemyAudio enemyAudio;
 
+	private PlayerStats player_Stats;
+
     void Awake() {
         
 		if (is_Boar || is_Cannibal) {
@@ -30,6 +32,7 @@ public class HealthScript : MonoBehaviour {
 
 		if (is_Player) {
 
+			player_Stats = GetComponent<PlayerStats>();
 
 		
 		}
@@ -44,6 +47,7 @@ public class HealthScript : MonoBehaviour {
 
 		if (is_Player) {
 			// show health stats in UI
+			player_Stats.Display_HealthStats(health);
 		}
 
 		if (is_Boar || is_Cannibal) {
@@ -81,6 +85,7 @@ public class HealthScript : MonoBehaviour {
 
 
 			// EnemyManager will spawn a new enemy.
+			EnemyManager.instance.EnemyDied(true);
 		}
 
 		if (is_Boar) {
@@ -95,6 +100,8 @@ public class HealthScript : MonoBehaviour {
 			StartCoroutine(DeadSound());
 
 			// EnemyManager will spawn a new enemy.
+			EnemyManager.instance.EnemyDied(false);
+
 		
 		}
 
@@ -107,6 +114,7 @@ public class HealthScript : MonoBehaviour {
 			}
 
 			// call EnemyManager to stop spawning enemies.
+			EnemyManager.instance.StopSpawning();
 
 			GetComponent<PlayerMovement>().enabled = false;
 			GetComponent<PlayerAttack>().enabled = false;

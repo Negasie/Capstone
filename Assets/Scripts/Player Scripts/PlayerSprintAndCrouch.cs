@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
+
 public class PlayerSprintAndCrouch : MonoBehaviour {
 	
 	private PlayerMovement playerMovement;
@@ -26,10 +26,10 @@ public class PlayerSprintAndCrouch : MonoBehaviour {
 	private float sprint_Step_Distance = 0.25f;
 	private float crouch_Step_Distance = 0.5f;
 	
-
+	private PlayerStats player_Stats;
 	
 	private float sprint_Value = 100f;
-	public float sprint_Treshold = 10f;
+	public float sprint_Threshold = 10f;
 	
 	void Awake () {
 		
@@ -39,7 +39,7 @@ public class PlayerSprintAndCrouch : MonoBehaviour {
 		
 		player_Footsteps = GetComponentInChildren<PlayerFootsteps>();
 		
-
+		player_Stats = GetComponent<PlayerStats>();
 		
 	}
 	void Start() {
@@ -83,7 +83,7 @@ public class PlayerSprintAndCrouch : MonoBehaviour {
 		
 		if(Input.GetKey(KeyCode.LeftShift) && !is_Crouching) {
 			
-			sprint_Value -= sprint_Treshold * Time.deltaTime;
+			sprint_Value -= sprint_Threshold * Time.deltaTime;
 			
 			if(sprint_Value <= 0f) {
 				
@@ -98,15 +98,15 @@ public class PlayerSprintAndCrouch : MonoBehaviour {
 				
 			}
 			
-
+			player_Stats.Display_StaminaStats(sprint_Value);
 			
 		} else {
 			
 			if(sprint_Value != 100f) {
 				
-				sprint_Value += (sprint_Treshold / 2f) * Time.deltaTime;
+				sprint_Value += (sprint_Threshold / 2f) * Time.deltaTime;
 				
-
+				player_Stats.Display_StaminaStats(sprint_Value);
 				
 				if(sprint_Value > 100f) {
 					sprint_Value = 100f;
