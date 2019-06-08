@@ -40,7 +40,7 @@ public class ArrowBowScript : MonoBehaviour {
 		// after we touch an enemy deactivate game object
 		if(target.tag == Tags.ENEMY_TAG) {
 			
-	//		target.GetComponent<HealthScript>().ApplyDamage(damage);
+			target.GetComponent<HealthScript>().ApplyDamage(damage);
 			
 			gameObject.SetActive(false);
 			
